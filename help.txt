@@ -1,0 +1,17 @@
+Qui hai la possibilità di visualizzare tutti i comandi disponibili. 
+(Ti ricordo inoltre che digitando solamente "/" ti compariranno dei suggerimenti in base ai comandi esistenti).
+
+Comandi:
+- /start : Messaggio di bevenuto;
+
+- /help : Messaggio di illustrazione comandi;
+
+- /findtracklink : Ricerca di brani;
+
+- /albumfindsonglink : Ricerca di brani di un determinato album;
+
+- /albumfindsongname : Ricerca dei nomi di brani di un determinato album;
+
+- /findalbum : Ricerca di album;
+
+- /findartist : Ricerca di un artista;

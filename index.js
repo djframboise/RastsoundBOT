@@ -1,13 +1,28 @@
 const TelegramBot = require('node-telegram-bot-api');
 const token = '1227252891:AAEvPQPa1DRXB42gcs_mEmTlqCvib9-4b_8';
+var fs = require('fs');
 var Deezer = require("deezer-node");
 var api = new Deezer();
 var param_2 = "";
+var help = fs.readFileSync('C:/Users/nicop/OneDrive/Desktop/BOT/help.txt', 'utf8');
 
 const bot = new TelegramBot(token,
     {
         polling: true
     });
+
+
+//Messaggio di benvenuto
+bot.onText(/\/start/, (msg) =>
+{
+    bot.sendMessage(msg.chat.id, "Benvenuti su Rastsound, Digitare il comando /help per visualizzare i comandi disponibili");
+});
+
+//Comando help di visualizzazione comandi
+bot.onText(/\/help/, (msg) =>
+{
+    bot.sendMessage(msg.chat.id, help);
+});
 
 
 //Link Deezer relative a determinate traccie

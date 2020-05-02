@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "deezer-node": "^1.0.0",
+    "fs": "0.0.1-security",
     "https": "^1.0.0",
     "node-telegram-bot-api": "^0.40.0",
     "querystring": "^0.2.0"
