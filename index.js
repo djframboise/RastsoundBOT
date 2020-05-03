@@ -1,66 +1,61 @@
-const TelegramBot = require('node-telegram-bot-api');
-const token = '1227252891:AAEvPQPa1DRXB42gcs_mEmTlqCvib9-4b_8';
-var fs = require('fs');
-var Deezer = require("deezer-node");
+const TelegramBot = require('node-telegram-bot-api');  //Libreria "node-telgram-bot-api"
+const token = '1227252891:AAEvPQPa1DRXB42gcs_mEmTlqCvib9-4b_8'; //Token del nostro Bot rilasciato da BotFather
+var fs = require('fs'); //Libreria readfile
+var Deezer = require("deezer-node"); //Libreria API Deezer
 var api = new Deezer();
 var param_2 = "";
-var help = fs.readFileSync('C:/Users/nicop/OneDrive/Desktop/BOT/help.txt', 'utf8');
+var help = fs.readFileSync('C:/Users/nicop/OneDrive/Desktop/BOT/help.txt', 'utf8'); //variabile di lettura del file help.txt
 
-const bot = new TelegramBot(token,
+const bot = new TelegramBot(token, //Inizializzazione del nostro bot e variabile polling di accesso all'API di Telgram
     {
         polling: true
     });
 
 
 //Messaggio di benvenuto
-bot.onText(/\/start/, (msg) =>
+bot.onText(/\/start/, (msg) => //Quando l'utente scrive /start
 {
-    bot.sendMessage(msg.chat.id, "Benvenuti su Rastsound, Digitare il comando /help per visualizzare i comandi disponibili");
+    bot.sendMessage(msg.chat.id, "Benvenuti su Rastsound, Digitare il comando /help per visualizzare i comandi disponibili"); //il bot risponde con questa stringa
 });
 
 //Comando help di visualizzazione comandi
-bot.onText(/\/help/, (msg) =>
+bot.onText(/\/help/, (msg) => //Quando l'utente scrive /start
 {
-    bot.sendMessage(msg.chat.id, help);
+    bot.sendMessage(msg.chat.id, help); //il bot risponde con il file "help.txt"
 });
 
 
 //Link Deezer relative a determinate traccie
-bot.onText(/\/findtracklink/, (msg, match) =>
+bot.onText(/\/findtracklink/, (msg, match) => //Quando l'utente scrive /findtracklink
 {
-    param_2 = match.input.split(" ")[1];
-    param_3 = match.input.split(" ")[2];
+    param_2 = match.input.split(" ")[1]; //lettura tramite split del primo valore inserito
+    param_3 = match.input.split(" ")[2]; //lettura tramite split del secondo valore inserito
 
-    if (param_3 == null)
+    if (param_3 == null) // se l'utente non ha inserito un secondo valore (ovvero la canzone è composta solo da una parola)
     {
-        param_2 = param_2.replace(" ", "&");
-
-        var tracks;
+        param_2 = param_2.replace(" ", "&"); //sostituisce gli spazi con "&" per renderlo decifrabile all'API
     
-        console.log(msg.chat.id);
-        console.log(param_2);
+        console.log(msg.chat.id); //Stampa nel terminale di msg
+        console.log(param_2); //Stampa nel terminale del valore inserito dall'utente
         var arr;
    
-        api.findTracks(param_2).then(data => {
-        console.log(data);
+        api.findTracks(param_2).then(data => { // funzione findtracks dell'API che salva in data il json di risposta in base al valore param_2
+        console.log(data); //Stampa nel terminale il JSON di risposta dell'API
         arr = data;
         
     })
     .then(function(){
-        let messaggio="";
-        for(let i=0; i<arr["data"].length; i++)
+        for(let i=0; i<arr["data"].length; i++) //Scandisco tutto il file JSON stampato dall'API
         {
-           bot.sendMessage(msg.chat.id, arr["data"][i].link)
+           bot.sendMessage(msg.chat.id, arr["data"][i].link) //Stampo il valore link nella chat telegram di tutti valori trovati nel JSON
         }
     })
     }
-    else
+    else //Se invece l'utente scrive un secondo valore (ovvero la canzone è composta da due parole) STESSA FUNZIONE precedente
     {
-        param_2 = param_2.replace(" ", "&");
-        param_3 = param_3.replace(" ", "&");
-        param_4 = param_2 + " " + param_3;
-
-        var tracks;
+        param_2 = param_2.replace(" ", "&"); //sostituisce gli spazi con "&" per renderlo decifrabile all'API
+        param_3 = param_3.replace(" ", "&"); //sostituisce gli spazi con "&" per renderlo decifrabile all'API
+        param_4 = param_2 + " " + param_3; //Assegno ad un unica variabile i due valori inseriti
     
         console.log(msg.chat.id);
         console.log(param_4);
@@ -82,36 +77,34 @@ bot.onText(/\/findtracklink/, (msg, match) =>
 });
 
 //Nomi relativi a determinate tracce
-bot.onText(/\/findtrackname/, (msg, match) =>
+bot.onText(/\/findtrackname/, (msg, match) => //Quando l'utente scrive /findtrackname
 {
-    param_2 = match.input.split(" ")[1];
-    param_3 = match.input.split(" ")[2];
-    if(param_3 == null)
+    param_2 = match.input.split(" ")[1]; //lettura tramite split del primo valore inserito
+    param_3 = match.input.split(" ")[2]; //lettura tramite split del secondo valore inserito
+    if(param_3 == null) // se l'utente non ha inserito un secondo valore (ovvero la canzone è composta solo da una parola)
     {
         param_2 = param_2.replace(" ", "&");
-
-        var tracks;
     
-    console.log(msg.chat.id);
-    console.log(param_2);
-    var arr;
+        console.log(msg.chat.id);
+        console.log(param_2);
+        var arr;
    
-    api.findTracks(param_2).then(data => {
+        api.findTracks(param_2).then(data => {
         
         arr = data;
         
     })
     .then(function(){
         let messaggio="";
-        for(let i=0; i<arr["data"].length; i++)
+        for(let i=0; i<arr["data"].length; i++) //scandisco l'intero JSON stampato 
         {
-            messaggio += arr["data"][i].title + "\n";
+            messaggio += arr["data"][i].title + "\n"; //Assegno ad una variabile il risualtato da stampare
         }
          console.log(arr["data"]);
-         bot.sendMessage(msg.chat.id, messaggio);
+         bot.sendMessage(msg.chat.id, messaggio); //Stampo il messaggio nella chat Telegram
     })
     }
-    else
+    else //se l'utente inserisce un secondo lavore STESSA FUNZIONE PRECEDENTE
     {
         param_2 = param_2.replace(" ", "&");
         param_3 = param_3.replace(" ", "&");
@@ -140,6 +133,8 @@ bot.onText(/\/findtrackname/, (msg, match) =>
     }
 });
 
+//LE FUNZIONI SONO DI STAMPA SONO IDENTICHE, CAMBIA LA FUNZIONE UTILIZZATA DELL'API PER I VARI COMANDI
+
 //Trovare link Deezer tutte le tracce di un determinato album
 bot.onText(/\/albumfindsonglink/, (msg, match) =>
 {
@@ -149,19 +144,17 @@ bot.onText(/\/albumfindsonglink/, (msg, match) =>
     {
         param_2 = param_2.replace(" ", "&");
 
-        var tracks;
-        var arr;
+        var tracksalbum;
 
         console.log(msg.chat.id);
         console.log(param_2);
 
-        api.findTracks({album: param_2}).then(data => {
+        api.findTracks({album: param_2}).then(data => { //Aggiungendo il termine album trova solo le traccie dell'album inserito
         console.log(data);
         tracksalbum = data;
         
     })
     .then(function(){
-        let messaggio="";
         for(let i=0; i<tracksalbum["data"].length; i++)
         {
            bot.sendMessage(msg.chat.id, tracksalbum["data"][i].link)
@@ -174,8 +167,7 @@ bot.onText(/\/albumfindsonglink/, (msg, match) =>
         param_3 = param_3.replace(" ", "&");
         param_4 = param_2 + " " + param_3;
 
-        var tracks;
-        var arr;
+        var tracksalbum;
 
         console.log(msg.chat.id);
         console.log(param_4);
@@ -186,10 +178,9 @@ bot.onText(/\/albumfindsonglink/, (msg, match) =>
         
     })
     .then(function(){
-        let messaggio="";
         for(let i=0; i<tracksalbum["data"].length; i++)
         {
-           bot.sendMessage(msg.chat.id, tracksalbum["data"][i].link)
+           bot.sendMessage(msg.chat.id, tracksalbum["data"][i].link) //Stampo i link deezer dei brani
         }
     })
     }
@@ -206,11 +197,11 @@ bot.onText(/\/albumfindsongname/, (msg, match) =>
 
         var nametrackalbum
 
-    console.log(msg.chat.id);
-    console.log(param_2);
+        console.log(msg.chat.id);
+        console.log(param_2);
 
-    api.findTracks({album: param_2}).then(data => {
-
+        api.findTracks({album: param_2}).then(data => {
+ 
         nametrackalbum = data;
         
     })
@@ -218,7 +209,7 @@ bot.onText(/\/albumfindsongname/, (msg, match) =>
         let messaggio="";
         for(let i=0; i<nametrackalbum["data"].length; i++)
         {
-            messaggio += nametrackalbum["data"][i].title + "\n";
+            messaggio += nametrackalbum["data"][i].title + "\n"; //Stampo il titolo dei brani
         }
          console.log(nametrackalbum["data"]);
          bot.sendMessage(msg.chat.id, messaggio);
@@ -232,10 +223,10 @@ bot.onText(/\/albumfindsongname/, (msg, match) =>
 
         var nametrackalbum
 
-    console.log(msg.chat.id);
-    console.log(param_4);
+        console.log(msg.chat.id);
+        console.log(param_4);
 
-    api.findTracks({album: param_4}).then(data => {
+        api.findTracks({album: param_4}).then(data => {
 
         nametrackalbum = data;
         
@@ -267,7 +258,7 @@ bot.onText(/\/findalbum/, (msg, match) =>
         console.log(msg.chat.id);
         console.log(param_2);
 
-        api.findAlbums(param_2).then(data => {
+        api.findAlbums(param_2).then(data => { //Trova gli album nel server Deezer
         console.log(data);
         albumsfind = data;
     })
@@ -340,12 +331,12 @@ bot.onText(/\/findartist/, (msg, match) =>
         console.log(msg.chat.id);
         console.log(param_2);
 
-        api.findArtists(param_2).then(data => {
+        api.findArtists(param_2).then(data => { //Trova informazioni relative ad un artista
         console.log(data);
         artistsfind = data;
         })
             .then(function(){
-            bot.sendMessage(msg.chat.id, JSON.stringify(artistsfind["data"][0].link));
+            bot.sendMessage(msg.chat.id, JSON.stringify(artistsfind["data"][0].link)); //Stampo il link deezer
             })
     }
     else
